@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather_API</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="card">
+        <div class="search">
+            <input type="text" placeholder="Enter city name" spellcheck="false">
+            <button><img src="search.png" alt=""></button>
+        </div>
+        <div class="error">
+            <p>Invalid City Name</p>
+        </div>
+        <div class="weather">
+            <img src="https://img.freepik.com/premium-vector/cartoon-cute-little-boy-hiding-umbrella-during-rain-weather_338059-30.jpg" class="weather-icon">
+            <h1 class="temp">22°C</h1>
+            <h2 class="city">New York</h2>  
+            <div class="details">
+                <div class="col">
+                    <img src="https://i0.wp.com/cdn.steemitimages.com/DQmZDXkVU3UFeatw5drFmLEUAbYKm3VGnxxRNbwz6Zm5Si5/lluvia-animada.gif?ssl=1" alt="">
+                    <div>
+                        <p class="humidity">50%</p>
+                        <p>Humidity</p>
+                    </div>
+                </div>
+                <div class="col">
+                    <img src="https://t4.ftcdn.net/jpg/01/96/77/83/360_F_196778375_RL5ySZkW2yOteZntFp7vn8A8Kd467sgO.jpg" alt="">
+                    <div>
+                        <p class="wind">15 km/hr</p>
+                        <p>wind speed</p>
+                    </div>
+                </div>
+            </div>   
+        </div>
+    </div>
+    <script>
+        const apiKey="8a1bfe302fa0f652a02c22ed07056864";
+        const apiUrl="https://api.openweathermap.org/data/2.5/weather?units=metric&q=";
+        const searchBox=document.querySelector(".search input");
+        const searchBtn=document.querySelector(".search button");
+        const weatherIcon=document.querySelector(".weather-icon");
+        
+
+        async function checkWeather(city){
+            const response=await fetch(apiUrl+city+`&appid=${apiKey}`);
+
+            if(response.status==404){
+                document.querySelector(".error").style.display="block";
+                document.querySelector(".weather").style.display="none";
+            }
+            else{
+                var data=await response.json();
+            
+            document.querySelector(".city").innerHTML=data.name;
+            document.querySelector(".temp").innerHTML=Math.round(data.main.temp)+"°C";
+            document.querySelector(".humidity").innerHTML=data.main.humidity+"%";
+            document.querySelector(".wind").innerHTML=data.wind.speed+"km/hr";
+            if(data.weather[0].main=="clouds"){
+                weatherIcon.src="https://i.pinimg.com/564x/d5/ba/90/d5ba902490c65af17b50e8f178cbd536.jpg"
+             }
+             else if(data.weather[0].main=="clear"){
+                weatherIcon.src="https://static.vecteezy.com/system/resources/thumbnails/024/825/182/small/3d-weather-icon-day-with-rain-free-png.png"
+             }
+             else if(data.weather[0].main=="Rain"){
+                weatherIcon.src="https://w7.pngwing.com/pngs/397/536/png-transparent-rainy-day-clouds-rain-the-weather-thumbnail.png"
+             }
+             else if(data.weather[0].main=="clouds"){
+                weatherIcon.src="https://www.freeiconspng.com/thumbs/weather-icon-png/weather-icon-png-25.png"
+             }
+             else if(data.weather[0].main=="Drizzle"){
+                weatherIcon.src="https://w7.pngwing.com/pngs/289/624/png-transparent-heavy-rain-storm-rain-cloud-electric-blue-storm-thumbnail.png"
+             }
+              else if(data.weather[0].main=="Mist"){
+                weatherIcon.src="https://w7.pngwing.com/pngs/655/213/png-transparent-cloud-weather-foggy-weather-text-weather-forecasting-design-thumbnail.png"
+             }
+             
+            document.querySelector(".weather").style.display="block";
+           document.querySelector(".error").style.display="none";
+
+        }
+    }
+        searchBtn.addEventListener("click",()=>{
+            checkWeather(searchBox.value);
+        })
+        
+    </script>
+    
+</body>
+</html>
